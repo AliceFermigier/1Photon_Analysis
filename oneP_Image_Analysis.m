@@ -15,25 +15,25 @@ close
 % Specifies the initiallization folder for selection of Data and where the restart 
 % variable is saved - If empty, files will be saved in directory that
 % Matlab is currently initallized
-Direc_Imaging = ''; % Don't forget last backward Slash !
+Direc_Imaging = 'D:\afermigier\Inscopix_Files\'; % Don't forget last backward Slash !
 
 % How many animals should be processed ? For each animal you can select as
 % many Sessions as you want later. Every Animal will give you a prompt that
 % allows you to select the Folder directories of the sessions you want to
 % process for this animal
-Animals2process = 1;
+Animals2process = 4;
 
 % Select the data type you want to process, currently the code is able to
-% process tif, tiff, isxd, hdf5 and mat files. For extension requsts,
+% process tif, tiff, isxd, hdf5 and mat files. For extension requests,
 % please write me an email (julian.hinz@fmi.ch)
 % If you select isxd, you will need to provide a Folder location with a
 % valid ISDP program installed. The code utlizes the infrastructure
 % provided by insxopix to load files
-Data_Format_in = 'isxd'; % Specify if files were saved as hdf5, tif, tiff or isxd, or mat 
+Data_Format_in = 'tiff'; % Specify if files were saved as hdf5, tif, tiff or isxd, or mat 
 ISDP_Path = 'C:\Program Files\Inscopix\Data Processing\'; % Change to your local installation 
 
 Recording_Speed = 20; % Recording speed of miniscope (in HZ)
-length_identifier = 6; % Length of animal identifier e.g. 865347 -> 6 // The code uses this to generate a final Folder Output for the different Animals
+length_identifier = 3; % Length of animal identifier e.g. 865347 -> 6 // The code uses this to generate a final Folder Output for the different Animals
 Folder_Structure = 'FT'; % If the tifs are in a structure - Animal/Animal_Session/Tif - FFT, if Animal_Session/Tif - FT 
 
 %%%%% Motion Correction
