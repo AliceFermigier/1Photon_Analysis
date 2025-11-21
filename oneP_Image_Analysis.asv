@@ -192,10 +192,9 @@ for i = 1:numel(All_nam)
     
     if dualcolor:
         % ---- KEEP ONLY GREEN MOVIES ----
-        isGreen = contains({Filenames.name}, {'G'}); 
-        isRed = contains({Filenames.name}, {'R'}); 
+        isGreen = contains({Filenames.name}, {'G_', 'G.', 'G'}); 
         Filenames = Filenames(isGreen);
-        Filenames_R = Filenames(isRed);;
+        Filenames_R = dir(fullfile(Current_folder, '*R*.tif'));
         
     [~, idx] = sort_nat({Filenames.name}); % Order the indices according to recording time
 
