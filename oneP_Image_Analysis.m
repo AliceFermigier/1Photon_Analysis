@@ -187,15 +187,17 @@ for i = 1:numel(All_nam)
     % Find all .tif files in the folder
     Current_folder = [All_nam{i}{1} '\'];
 
-    searchString = fullfile(Current_folder, ['*.' Data_Format_in]);
-    Filenames = dir(searchString);
-    
-    if dualcolor:
-        % ---- KEEP ONLY GREEN MOVIES ----
-        isGreen = contains({Filenames.name}, {'G'}); 
-        isRed = contains({Filenames.name}, {'R'}); 
-        Filenames = Filenames(isGreen);
-        Filenames_R = Filenames(isRed);;
+    if dualcolor
+        % Only select GREEN movie for motion correction
+        searchString = fullfile(Current_folder, ['*G_*.' Data_Format_in]);  % e.g. 839G_EPM.tif
+        Filenames = dir(searchString);
+        if isempty(Filenames)
+            error('No GREEN movie found in %s. Expected something like 839G_*.tif', Current_folder);
+        end
+    else
+        searchString = fullfile(Current_folder, ['*.' Data_Format_in]);
+        Filenames = dir(searchString);
+    end
         
     [~, idx] = sort_nat({Filenames.name}); % Order the indices according to recording time
 
@@ -229,7 +231,7 @@ for i = 1:numel(All_nam)
     BW_all{i} = Position_all;
 end
 
-% Motion Correction and Alingment
+% Motion Correction and Alignment
 % Create Filter used for Motion correction - This filter is taken from the
 % CNMFE initiallization procedure and works well for MC
 
@@ -342,6 +344,15 @@ while ~Saved
     end
 end
 clear Movie_all CN_all Motion_Correction_QC
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% If Dual Color : Motion Correction of Red frames and manual extraction of cells
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% ---- Apply saved GREEN MC shifts to RED movie + ROI extraction ----
+disp('Applying green-channel motion correction shifts to red channel...');
+ApplyShiftsRED;   % uses All_nam, T_DS_factor, Spatial_Downsampling, etc.
+disp('Finished RED channel processing.');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% CNMFE
