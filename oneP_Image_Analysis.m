@@ -346,14 +346,14 @@ end
 clear Movie_all CN_all Motion_Correction_QC
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% If Dual Color : Motion Correction of Red frames and manual extraction of cells
+% If Dual Color : Motion Correction of Red frames and manual extraction of cells
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% ---- Apply saved GREEN MC shifts to RED movie + ROI extraction ----
+%% Apply saved GREEN MC shifts to RED movie
 disp('Applying green-channel motion correction shifts to red channel...');
 ApplyShiftsRED;   % uses All_nam, T_DS_factor, Spatial_Downsampling, etc.
 
-%% ---- Apply saved GREEN MC shifts to RED movie + ROI extraction ----
+%% ROI extraction
 disp('Manual extraction of ROIs');
 ManualROIsRED;
 
