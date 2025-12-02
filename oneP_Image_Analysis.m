@@ -352,6 +352,8 @@ clear Movie_all CN_all Motion_Correction_QC
 %% ---- Apply saved GREEN MC shifts to RED movie + ROI extraction ----
 disp('Applying green-channel motion correction shifts to red channel...');
 ApplyShiftsRED;   % uses All_nam, T_DS_factor, Spatial_Downsampling, etc.
+
+%% ---- Apply saved GREEN MC shifts to RED movie + ROI extraction ----
 disp('Manual extraction of ROIs');
 ManualROIsRED;
 
