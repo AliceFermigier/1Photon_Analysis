@@ -15,13 +15,13 @@ close
 % Specifies the initiallization folder for selection of Data and where the restart 
 % variable is saved - If empty, files will be saved in directory that
 % Matlab is currently initallized
-Direc_Imaging = 'D:\afermigier\Inscopix_Files\DualColor_202511\'; % Don't forget last backward Slash !
+Direc_Imaging = 'E:\Inscopix_Projects\DualColor_Deinterleaved_data\'; % Don't forget last backward Slash !
 
 % How many animals should be processed ? For each animal you can select as
 % many Sessions as you want later. Every Animal will give you a prompt that
 % allows you to select the Folder directories of the sessions you want to
 % process for this animal
-Animals2process = 4;
+Animals2process = 31;
 dualcolor = true;
 
 % Select the data type you want to process, currently the code is able to
@@ -44,7 +44,7 @@ max_reps_motioncorr = 6; % Number of maximally allowed repititions of motion cor
 Tolerance_motion = 0.01; % Number of tolerated motion before motion correction is stopped measure is = mean(shift of Frames) < Tolerance 
 Indv_Template = true; % Do you want to generate a new template for each Session // Recommendation - leave it at true
 Chunk_size = 3000; % How many frames are processed at the same time, decrease for lower RAM usage
-Qualitycheck = true; % Creates a DS video and max intensity projection Images for quality control
+Qualitycheck = false; % Creates a DS video and max intensity projection Images for quality control
 Size_mov = 500; % Size of the displayed movie for quality control
 
 %%%%% CNMFE
@@ -189,10 +189,10 @@ for i = 1:numel(All_nam)
 
     if dualcolor
         % Only select GREEN movie for motion correction
-        searchString = fullfile(Current_folder, ['*G_*.' Data_Format_in]);  % e.g. 839G_EPM.tif
+        searchString = fullfile(Current_folder, ['*G_*.' Data_Format_in]);  % e.g. 839G_EPM.tiff
         Filenames = dir(searchString);
         if isempty(Filenames)
-            error('No GREEN movie found in %s. Expected something like 839G_*.tif', Current_folder);
+            error('No GREEN movie found in %s. Expected something like 839G_*.tiff', Current_folder);
         end
     else
         searchString = fullfile(Current_folder, ['*.' Data_Format_in]);
@@ -352,7 +352,8 @@ clear Movie_all CN_all Motion_Correction_QC
 %% ---- Apply saved GREEN MC shifts to RED movie + ROI extraction ----
 disp('Applying green-channel motion correction shifts to red channel...');
 ApplyShiftsRED;   % uses All_nam, T_DS_factor, Spatial_Downsampling, etc.
-disp('Finished RED channel processing.');
+disp('Manual extraction of ROIs');
+ManualROIsRED;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% CNMFE

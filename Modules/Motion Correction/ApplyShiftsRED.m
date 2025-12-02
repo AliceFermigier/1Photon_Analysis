@@ -1,4 +1,4 @@
-%% Apply saved green motion-correction shifts to RED movie + manual ROI extraction
+%% Apply saved green motion-correction shifts to RED movie
 % Usage: run after Motion_correction has finished for the session(s).
 % Expects each session folder to contain:
 %   processed_data/MC_Shifts.mat   (saved by Motion_correction)
@@ -156,58 +156,10 @@ for p = 1:size(All_nam,1)
         
         % Save corrected red movie to processed_data
         if ~exist(proc_dir,'dir'), mkdir(proc_dir); end
-        savefast(fullfile(proc_dir, 'MC_red.mat'), 'Red_MC');  % large file
-        fprintf('Saved corrected red movie: %s\n', fullfile(proc_dir, 'MC_red.mat'));
-        
-        % Generate mean projection for ROI drawing (use the uint16 -> double)
-        mean_red = mean(double(Red_MC), 3);
-        figure; imagesc(mean_red); axis image; colormap bone; title(['Mean RED: ' red_name]);
-        
-        % Manual ROI drawing (polygons). Store ROI masks and positions
-        Red_ROIs = {};
-        Red_Masks = {};
-        keep_drawing = true;
-        uiwait(msgbox('Draw ROIs on the RED mean projection. Double-click to finish each ROI. Click OK to start.', 'Draw ROIs','modal'));
-        while keep_drawing
-            h = drawpolygon('LineWidth',1.5,'Color','r');
-            pos = h.Position;
-            Red_ROIs{end+1} = pos;
-            mask = poly2mask(pos(:,1), pos(:,2), size(Red_MC,1), size(Red_MC,2));
-            Red_Masks{end+1} = mask;
-            choice = questdlg('Add another ROI?', 'ROI','Yes','No','Yes');
-            if strcmp(choice,'No'), keep_drawing = false; end
-        end
-        close(gcf);
-        
-        % Extract traces for each ROI from the corrected red movie
-        numROIs = numel(Red_Masks);
-        Tframes = size(Red_MC,3);
-        red_traces = zeros(numROIs, Tframes);
-        for r = 1:numROIs
-            m = Red_Masks{r};
-            idxPix = find(m);
-            % extract mean across pixels for each timepoint
-            % Red_MC stored as uint16 -> convert to double and normalize to 0..1 using Max_Value
-            for tt = 1:Tframes
-                red_traces(r,tt) = mean(double(Red_MC(:,:,tt)(idxPix)));
-            end
-        end
-        
-        % Normalize traces to 0..1 by dividing by max uint16
-        red_traces = red_traces ./ double(intmax('uint16'));
-        
-        % Compute simple dF/F using 10th percentile as baseline
-        F0 = prctile(red_traces, 10, 2);
-        dFF_red = (red_traces - F0) ./ F0;
-        
-        % Save ROIs & traces
-        savefull = fullfile(proc_dir, 'RED_manual_results.mat');
-        save(savefull, 'Red_ROIs', 'Red_Masks', 'red_traces', 'dFF_red', 'Red_MC', '-v7.3');
-        fprintf('Saved RED ROI results to %s\n', savefull);
-        
-        % Clear large variables before next session
-        clear Red_MC red_ds red_traces dFF_red Red_ROIs Red_Masks mean_red
-    end
-end
+        savefast(fullfile(proc_dir, 'MC_red.mat'), 'Red_MC');
+        fprintf('Saved corrected red movie: %s\n', fullfile(proc_dir, 'MC_red.mat'));    
+
+    end 
+end 
 
 disp('Finished applying green shifts to red channel and extracting red ROIs/traces.');

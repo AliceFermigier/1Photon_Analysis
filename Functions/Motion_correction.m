@@ -1,6 +1,8 @@
 %% Workflow Motion Correction on hdf5 and tif files
 % written by Julian Hinz @Luthi lab 2018
 
+%#function isx
+
 function [Movie_all, Max_all] = Motion_correction(All_nam, max_reps_motioncorr, ...
     Tolerance_motion, T_DS_factor, Resize_factor, BW_all, psf, Data_Format_in,...
     Chunk_size, Recording_Speed, Indv_Template)
@@ -32,6 +34,8 @@ function [Movie_all, Max_all] = Motion_correction(All_nam, max_reps_motioncorr, 
             
             % Find all files in the folder, either tif or h5
             Current_folder = [subfolder_extracted{pp} '\'];
+            disp('Current_folder:')
+            disp(Current_folder)
              
             % Get Folder Name
             [~,name_R,~] = fileparts(subfolder_extracted{pp});
@@ -42,9 +46,11 @@ function [Movie_all, Max_all] = Motion_correction(All_nam, max_reps_motioncorr, 
             else
                 disp('File was already processed - Results will be overwritten !')
             end
- 
-            searchString = fullfile(Current_folder, ['*.' Data_Format_in]);
+            
+            searchString = fullfile(Current_folder, ['*G_*.' Data_Format_in]);
             Filenames = dir(searchString);
+            disp('Filenames:')
+            disp(Filenames)
             
             % Define Region for motion correction
             BW_x = BW_all{p}{1, 1};
@@ -91,10 +97,11 @@ function [Movie_all, Max_all] = Motion_correction(All_nam, max_reps_motioncorr, 
                 MC_f = matfile([Current_folder 'processed_data\MC'], 'Writable', true);
 
             elseif strcmpi(Data_Format_in, 'tif') || strcmpi(Data_Format_in, 'tiff')
-                
                 [~, idx] = sort_nat({Filenames.date}); % Order the indices according to recording time
                 
                 num = size(Filenames, 1);
+                disp(Filenames)
+                disp(num)
                 A = cell(num, 1);
                 t = Tiff([Current_folder Filenames(idx(1)).name]);
                 Size = size(read(t));
@@ -162,8 +169,8 @@ function [Movie_all, Max_all] = Motion_correction(All_nam, max_reps_motioncorr, 
                 savefast([Current_folder 'processed_data\MC'], 'MC');
                 clear MC
                 MC_f = matfile([Current_folder 'processed_data\MC'], 'Writable', true);
+                
             elseif strcmpi(Data_Format_in, 'isxd')
-                   
                 func_name = 'isx_movie_get_frame_data_u16';
                 
                 if size(Filenames, 1) ~= 1
@@ -183,7 +190,7 @@ function [Movie_all, Max_all] = Motion_correction(All_nam, max_reps_motioncorr, 
                     
                     Data_Collection = cell(size(Filenames, 1), 1);
                     
-                    parfor z = 1:size(Filenames, 1)
+                    for z = 1:size(Filenames, 1)
                         movie = isx.Movie.read([Current_folder Filenames(idx(z)).name]);
                         
                         data_tmp = cell(movie.timing.num_samples, 1);
