@@ -21,7 +21,7 @@ Direc_Imaging = 'E:\Inscopix_Projects\DualColor_Deinterleaved_data\'; % Don't fo
 % many Sessions as you want later. Every Animal will give you a prompt that
 % allows you to select the Folder directories of the sessions you want to
 % process for this animal
-Animals2process = 31;
+Animals2process = 2;
 dualcolor = true;
 
 % Select the data type you want to process, currently the code is able to
