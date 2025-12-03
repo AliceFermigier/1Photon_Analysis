@@ -157,8 +157,34 @@ for p = 1:size(All_nam,1)
         % Save corrected red movie to processed_data
         if ~exist(proc_dir,'dir'), mkdir(proc_dir); end
         savefast(fullfile(proc_dir, 'MC_red.mat'), 'Red_MC');
-        fprintf('Saved corrected red movie: %s\n', fullfile(proc_dir, 'MC_red.mat'));    
+        fprintf('Saved corrected red movie: %s\n', fullfile(proc_dir, 'MC_red.mat'));
+        
+        % ---------------- QC: show a downsampled playback for manual inspection ----------
+        if Qualitycheckred
+            % create an 8-bit movie for viewing (reduce memory and ensure implay works)
+            % scale Red_MC (uint16) to uint8 for viewing
+            movie8 = im2uint8(mat2gray(double(Red_MC)));
+            % Downsample temporally if movie is very long
+            maxFramesToShow = 1000; % reduce if too large
+            step = max(1, round(size(movie8,3)/maxFramesToShow));
+            movie8_ds = movie8(:,:,1:step:end);
 
+            % Convert to MxNx3 frames for implay (RGB), or implay accepts grayscale stacks
+            % Use implay on movie8_ds directly
+            hPlayer = implay(movie8_ds);
+            % Optional: position the player window
+            try
+                hPlayer.Parent.Position = [100 100 600 400];
+            catch
+                % ignore if not supported
+            end
+
+            disp('Previewing RED motion-corrected movie. Close the implay window to continue.');
+            % Pause until implay window is closed
+            uiwait(msgbox('Close the implay window to continue','RED QC','modal'));
+            % If you prefer, remove the uiwait and ask user to press Enter:
+            % disp('Press Enter to continue'); pause;
+        end
     end 
 end 
 

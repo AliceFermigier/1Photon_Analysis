@@ -47,6 +47,9 @@ Chunk_size = 3000; % How many frames are processed at the same time, decrease fo
 Qualitycheck = false; % Creates a DS video and max intensity projection Images for quality control
 Size_mov = 500; % Size of the displayed movie for quality control
 
+%%%%% Motion Correction for red channel if dual color
+Qualitycheckred = true; % Creates a DS video and max intensity projection Images for quality control
+
 %%%%% CNMFE
 % This feature enables processing of large files. Expect that CNMFE
 % will require ~20 GB of RAM for a 60 min recording @20Hz/core
