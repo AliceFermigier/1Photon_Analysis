@@ -183,7 +183,7 @@ function [Movie_all, Max_all] = Motion_correction(All_nam, max_reps_motioncorr, 
                     
                     Data_Collection = cell(size(Filenames, 1), 1);
                     
-                    parfor z = 1:size(Filenames, 1)
+                    for z = 1:size(Filenames, 1)
                         movie = isx.Movie.read([Current_folder Filenames(idx(z)).name]);
                         
                         data_tmp = cell(movie.timing.num_samples, 1);

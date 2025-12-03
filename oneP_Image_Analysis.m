@@ -15,13 +15,13 @@ close
 % Specifies the initiallization folder for selection of Data and where the restart 
 % variable is saved - If empty, files will be saved in directory that
 % Matlab is currently initallized
-Direc_Imaging = 'D:\afermigier\Inscopix_Files\DualColor_202511\'; % Don't forget last backward Slash !
+Direc_Imaging = 'E:\Inscopix_Projects\DualColor_Deinterleaved_data\'; % Don't forget last backward Slash !
 
 % How many animals should be processed ? For each animal you can select as
 % many Sessions as you want later. Every Animal will give you a prompt that
 % allows you to select the Folder directories of the sessions you want to
 % process for this animal
-Animals2process = 4;
+Animals2process = 2;
 dualcolor = true;
 
 % Select the data type you want to process, currently the code is able to
