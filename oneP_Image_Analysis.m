@@ -44,7 +44,7 @@ max_reps_motioncorr = 6; % Number of maximally allowed repititions of motion cor
 Tolerance_motion = 0.01; % Number of tolerated motion before motion correction is stopped measure is = mean(shift of Frames) < Tolerance 
 Indv_Template = true; % Do you want to generate a new template for each Session // Recommendation - leave it at true
 Chunk_size = 3000; % How many frames are processed at the same time, decrease for lower RAM usage
-Qualitycheck = true; % Creates a DS video and max intensity projection Images for quality control
+Qualitycheck = false; % Creates a DS video and max intensity projection Images for quality control
 Size_mov = 500; % Size of the displayed movie for quality control
 
 %%%%% CNMFE
