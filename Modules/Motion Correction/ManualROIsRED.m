@@ -97,29 +97,28 @@ for p = 1:size(All_nam,1)
         imagesc(max_red); axis image off; colormap gray;
         title(['Max RED Projection (filtered): ' red_name]);
         drawnow;
-        
-        % ---------- Manual ROI drawing ----------
-        Red_ROIs = {};  % polygon vertex lists
-        Red_Masks = {}; % logical masks
+
+        % ----- Manual ROI drawing loop -----
+        Red_ROIs = {};
+        Red_Masks = {};
         keep_drawing = true;
-        uiwait(msgbox('Draw ROIs on the RED max projection. Double-click to finish each ROI. Click OK to start.', 'Draw ROIs','modal'));
-        
+
+        uiwait(msgbox('Draw ROIs on the RED mean projection. Double-click to finish each ROI.', ...
+            'Draw ROIs','modal'));
+
         while keep_drawing
-            try
-                h = drawpolygon('LineWidth',1.5,'Color','r');    % user draws polygon and double-clicks to close
-            catch ME
-                close(hfig);
-                rethrow(ME);
-            end
-            pos = h.Position; % Nx2 [x y] (x: column, y: row)
+            h = impoly(gca);               % older MATLAB compatible
+            pos = wait(h);                 % wait until user finishes polygon
             Red_ROIs{end+1} = pos;
-            mask = poly2mask(pos(:,1), pos(:,2), H, W);
+            mask = poly2mask(pos(:,1), pos(:,2), d1, d2);
             Red_Masks{end+1} = mask;
-            
+
             choice = questdlg('Add another ROI?', 'ROI','Yes','No','Yes');
-            if strcmp(choice,'No'), keep_drawing = false; end
+            if strcmp(choice,'No')
+                keep_drawing = false;
+            end
         end
-        close(hfig);
+        close(gcf);
         
         % ---------- Vectorized trace extraction ----------
         % Reshape movie to d x T (double) for matrix ops

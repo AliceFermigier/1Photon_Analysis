@@ -144,7 +144,7 @@ function CNMFE(All_nam, Fs, NW2Test, channel)
         
         % Set Big file processing true if file is above certain size
         b = matfile(nam);
-        [d1, d2, d3] = size(b.MC);
+        [d1, d2, d3] = size(b.MC_red);
         Size_mov = d1*d2*d3;
 
         if Size_mov <  3.5581e+9
