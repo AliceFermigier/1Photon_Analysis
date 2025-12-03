@@ -368,7 +368,7 @@ ManualROIsRED;
 
 % Run CNMFE for all selected files
 for p = 1:size(All_nam, 1)
-    CNMFE(All_nam{p}, Fs, NW2Test);
+    CNMFE(All_nam{p}, Fs, NW2Test, 'red');
     vars = who('-regexp', 'mat_data');
     clear(vars{:})
 end
@@ -396,7 +396,7 @@ save([Direc_Imaging 'Restart_' num2str(Counter_mat) '.mat'], '-v7.3');
 % them after post processing - deletion of components
 % based on code found in: https://github.com/zhoupc/CNMF_E
 
-post_process_CNMFE(All_nam, Threshold_Low_SN, Overlap, Outer_area, minPixel)
+post_process_CNMFE(All_nam, Threshold_Low_SN, Overlap, Outer_area, minPixel, 'red');
 
 Current_Status = 'PostProcess finished';
 save([Direc_Imaging 'Restart_' num2str(Counter_mat) '.mat'], '-v7.3');

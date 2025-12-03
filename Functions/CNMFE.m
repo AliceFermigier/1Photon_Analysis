@@ -1,17 +1,24 @@
 %% Extract neural signal with CNMFE
 
-function CNMFE(All_nam, Fs, NW2Test)
+function CNMFE(All_nam, Fs, NW2Test, channel)
     
 
     for i = 1:size(All_nam, 2)
 
         nam_temp = All_nam{i};         
         Filenames = dir(fullfile([nam_temp '\processed_data'], '*.mat'));
-        index2 = cellfun(@(x) any(strfind(x, 'MC.mat')), {Filenames.name});
+
+        if strcmpi(channel,'red')
+            index2 = contains({Filenames.name}, 'MC_red.mat');
+        elseif strcmpi(channel,'green')
+            index2 = contains({Filenames.name}, 'MC.mat');
+        else
+            error('Channel must be ''red'' or ''green''.');
+        end
 
         %% choose multiple datasets or just one  
         neuron = Sources2D(); 
-        nam = [nam_temp '\processed_data\' Filenames(index2).name];         % you can put all file names into a cell array; when it's empty, manually select files 
+        nam = fullfile(nam_temp, 'processed_data', Filenames(find(index2,1)).name);         % you can put all file names into a cell array; when it's empty, manually select files 
         nam = neuron.select_data(nam);  %if nam is [], then select data interactively
         
         pars_envs = struct('memory_size_to_use', 150 / 12, ...   % GB, memory space you allow to use in MATLAB
@@ -266,9 +273,9 @@ function CNMFE(All_nam, Fs, NW2Test)
         %% save neurons shapes
         neuron.save_neurons();
 
-        savefast([nam_temp '\processed_data\Result_CNMFE.mat'], 'neuron');
-        savefast([nam_temp '\processed_data\Outline.mat'], 'Coor');
-        savefast([nam_temp '\processed_data\CN.mat'], 'Cn');
+        savefast([nam_temp '\processed_data\Result_CNMFE_' channel '.mat'], 'neuron');
+        savefast([nam_temp '\processed_data\Outline_' channel '.mat'], 'Coor');
+        savefast([nam_temp '\processed_data\CN_' channel '.mat'], 'Cn');
 
 
     end

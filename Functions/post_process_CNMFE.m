@@ -5,7 +5,7 @@
 % https://elifesciences.org/articles/28728
 
 function post_process_CNMFE(All_nam, Threshold_Low_SN, Overlap, Outer_area, ...
-    minPixel)
+    minPixel, channel)
 
     for i = 1:size(All_nam, 1)
         
@@ -14,8 +14,8 @@ function post_process_CNMFE(All_nam, Threshold_Low_SN, Overlap, Outer_area, ...
         
         for ii = 1:size(Sessions, 2)
 
-            load([All_nam{i}{ii} '\processed_data\Result_CNMFE.mat']);
-            load([All_nam{i}{ii} '\processed_data\CN.mat']);        
+            load([All_nam{i}{ii} '\processed_data\Result_CNMFE_' channel '.mat']);
+            load([All_nam{i}{ii} '\processed_data\CN_' channel '.mat']);        
             
             % find ROIs that lie exclusively in the outer area of the FOV
             % and exclude any small neurons
@@ -52,7 +52,7 @@ function post_process_CNMFE(All_nam, Threshold_Low_SN, Overlap, Outer_area, ...
             end
     
             Exclude_comb = logical(Delete) | Exclude';
-            savefast([All_nam{i}{ii} '\processed_data\Delete_Overlap_1.mat'], 'Exclude_comb');
+            savefast([All_nam{i}{ii} '\processed_data\Delete_Overlap_1_' channel '.mat'], 'Exclude_comb');
             
             % Utilize the tool from the CNMFE with adaptations to manually
             % exclude neurons that don't fit selection criteria
@@ -62,10 +62,10 @@ function post_process_CNMFE(All_nam, Threshold_Low_SN, Overlap, Outer_area, ...
             
             if isempty(neuron.A) 
                 Dummyvar = zeros(10,10);
-                savefast([All_nam{i}{ii} '\processed_data\Result_CNMFE_noResults.mat'], 'Dummyvar');
+                savefast([All_nam{i}{ii} '\processed_data\Result_CNMFE_noResults_' channel '.mat'], 'Dummyvar');
                 disp('All Neurons were deleted, a dummy variable saved. The alignment will skip this session later.')
             else    
-                savefast([All_nam{i}{ii} '\processed_data\Result_CNMFE_postprocessed.mat'], 'neuron');
+                savefast([All_nam{i}{ii} '\processed_data\Result_CNMFE_postprocessed_' channel '.mat'], 'neuron');
                 
                 % Calculate Overlap of components for the low SNR neurons
                 Num_Neurons = size(neuron.A, 2);
@@ -89,7 +89,7 @@ function post_process_CNMFE(All_nam, Threshold_Low_SN, Overlap, Outer_area, ...
                     end
                 end
 
-                savefast([All_nam{i}{ii} '\processed_data\Delete_Overlap_2.mat'], 'Delete');
+                savefast([All_nam{i}{ii} '\processed_data\Delete_Overlap_2_' channel '.mat'], 'Delete');
                 
                 % Summarize Data in new structure
                 Data.A = neuron.A(:,~logical(Delete)); 
@@ -100,12 +100,12 @@ function post_process_CNMFE(All_nam, Threshold_Low_SN, Overlap, Outer_area, ...
                 Data.C_raw = neuron.C_raw(~logical(Delete),:);
                 Data.S = neuron.S(~logical(Delete),:);
 
-                savefast([All_nam{i}{ii} '\processed_data\CNMFE_Data.mat'], 'Data');
+                savefast([All_nam{i}{ii} '\processed_data\CNMFE_Data_' channel '.mat'], 'Data');
 
                 % Get a new Img of the Outlines
                 neuron.A = neuron.A(:,~logical(Delete));            
                 Coor = neuron.show_contours(0.6);
-                saveas(gcf,[All_nam{i}{ii} '\processed_data\Outlines_Neurons.png'])
+                saveas(gcf,[All_nam{i}{ii} '\processed_data\Outlines_Neurons_' channel '.png'])
             end
             
             close all
