@@ -72,7 +72,7 @@ PWD = ''; % The PWD to the GMail
 % components (1-Threshold_Low_SN) and checks whether they are overlapping
 % more than indicated in Overlap and exclude them if they do.
 
-Threshold_Low_SN = 0.6; % how many neurons are consider high S/N - all others are checked for overlap
+Threshold_Low_SN = 0.3; % how many neurons are consider high S/N - all others are checked for overlap
 Overlap = 0.6; % This is the Overlap neurons need to have to get kicked out
 Outer_area = 6; % in pix, excludes all shapes that lie in this area 
 minPixel = 10; % minimum Size of components
@@ -189,10 +189,10 @@ for i = 1:numel(All_nam)
 
     if dualcolor
         % Only select GREEN movie for motion correction
-        searchString = fullfile(Current_folder, ['*G_*.' Data_Format_in]);  % e.g. 839G_EPM.tif
+        searchString = fullfile(Current_folder, ['*R_*.' Data_Format_in]);  % e.g. 839G_EPM.tif
         Filenames = dir(searchString);
         if isempty(Filenames)
-            error('No GREEN movie found in %s. Expected something like 839G_*.tif', Current_folder);
+            error('No RED movie found in %s. Expected something like 839R_*.tif', Current_folder);
         end
     else
         searchString = fullfile(Current_folder, ['*.' Data_Format_in]);
