@@ -21,8 +21,7 @@ Direc_Imaging = 'E:\Inscopix_Projects\DualColor_Deinterleaved_data\'; % Don't fo
 % many Sessions as you want later. Every Animal will give you a prompt that
 % allows you to select the Folder directories of the sessions you want to
 % process for this animal
-Animals2process = 2;
-dualcolor = true;
+Animals2process = 4;
 
 % Select the data type you want to process, currently the code is able to
 % process tif, tiff, isxd, hdf5 and mat files. For extension requests,
@@ -34,8 +33,8 @@ Data_Format_in = 'tiff'; % Specify if files were saved as hdf5, tif, tiff or isx
 ISDP_Path = 'C:\Program Files\Inscopix\Data Processing\'; % Change to your local installation 
 
 Recording_Speed = 20; % Recording speed of miniscope (in HZ)
-length_identifier = 3; % Length of animal identifier e.g. 865347 -> 6 // The code uses this to generate a final Folder Output for the different Animals
-Folder_Structure = 'FT'; % If the tifs are in a structure - Animal/Animal_Session/Tif - FFT, if Animal_Session/Tif - FT 
+length_identifier = 4; % Length of animal identifier e.g. 865347 -> 6 // The code uses this to generate a final Folder Output for the different Animals
+Folder_Structure = 'FFT'; % If the tifs are in a structure - Animal/Animal_Session/Tif - FFT, if Animal_Session/Tif - FT 
 
 %%%%% Motion Correction
 T_DS_factor = 1; % Used for Data DS
@@ -186,18 +185,8 @@ for i = 1:numel(All_nam)
         
     % Find all .tif files in the folder
     Current_folder = [All_nam{i}{1} '\'];
-
-    if dualcolor
-        % Only select GREEN movie for motion correction
-        searchString = fullfile(Current_folder, ['*G_*.' Data_Format_in]);  % e.g. 839G_EPM.tif
-        Filenames = dir(searchString);
-        if isempty(Filenames)
-            error('No green movie found in %s. Expected something like 839G_*.tif', Current_folder);
-        end
-    else
-        searchString = fullfile(Current_folder, ['*.' Data_Format_in]);
-        Filenames = dir(searchString);
-    end
+    searchString = fullfile(Current_folder, ['*.' Data_Format_in]);
+    Filenames = dir(searchString);
         
     [~, idx] = sort_nat({Filenames.name}); % Order the indices according to recording time
 
