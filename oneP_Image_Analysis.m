@@ -189,10 +189,10 @@ for i = 1:numel(All_nam)
 
     if dualcolor
         % Only select GREEN movie for motion correction
-        searchString = fullfile(Current_folder, ['*R_*.' Data_Format_in]);  % e.g. 839G_EPM.tif
+        searchString = fullfile(Current_folder, ['*G_*.' Data_Format_in]);  % e.g. 839G_EPM.tif
         Filenames = dir(searchString);
         if isempty(Filenames)
-            error('No RED movie found in %s. Expected something like 839R_*.tif', Current_folder);
+            error('No green movie found in %s. Expected something like 839G_*.tif', Current_folder);
         end
     else
         searchString = fullfile(Current_folder, ['*.' Data_Format_in]);
