@@ -25,7 +25,7 @@ function CNMFE(All_nam, Fs, NW2Test)
         gSig = 4;           % pixel, gaussian width of a gaussian kernel for filtering the data. 0 means no filtering
         gSiz = 16;          % pixel, neuron diameter
         ssub = 1;           % spatial downsampling factor
-        with_dendrites = true;   % with dendrites or not
+        with_dendrites = false;   % with dendrites or not
         if with_dendrites
             % determine the search locations by dilating the current neuron shapes
             updateA_search_method = 'dilate';  % #ok<UNRCH>
@@ -70,8 +70,8 @@ function CNMFE(All_nam, Fs, NW2Test)
 
         % -------------------------  INITIALIZATION   -------------------------  %
         K = [];             % maximum number of neurons per patch. when K=[], take as many as possible.
-        min_corr = 0.8;     % minimum local correlation for a seeding pixel
-        min_pnr = 8;       % minimum peak-to-noise ratio for a seeding pixel
+        min_corr = 0.6;     % minimum local correlation for a seeding pixel
+        min_pnr = 5;       % minimum peak-to-noise ratio for a seeding pixel
         min_pixel = gSig^2;      % minimum number of nonzero pixels for each neuron
         bd = 0;             % number of rows/columns to be ignored in the boundary (mainly for motion corrected data)
         frame_range = [];   % when [], uses all frames
@@ -83,8 +83,8 @@ function CNMFE(All_nam, Fs, NW2Test)
         % set the value as false when the background fluctuation is small (2p)
 
         % -------------------------  Residual   -------------------------  %
-        min_corr_res = 0.7;
-        min_pnr_res = 6;
+        min_corr_res = 0.5;
+        min_pnr_res = 4;
         seed_method_res = 'auto';  % method for initializing neurons from the residual
         update_sn = true;
 

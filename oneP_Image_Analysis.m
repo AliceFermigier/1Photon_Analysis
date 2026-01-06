@@ -15,7 +15,7 @@ close
 % Specifies the initiallization folder for selection of Data and where the restart 
 % variable is saved - If empty, files will be saved in directory that
 % Matlab is currently initallized
-Direc_Imaging = 'E:\Inscopix_Projects\DualColor_Deinterleaved_data\'; % Don't forget last backward Slash !
+Direc_Imaging = 'F:\Inscopix_data\DualColor_202511\'; % Don't forget last backward Slash !
 
 % How many animals should be processed ? For each animal you can select as
 % many Sessions as you want later. Every Animal will give you a prompt that
@@ -71,10 +71,10 @@ PWD = ''; % The PWD to the GMail
 % components (1-Threshold_Low_SN) and checks whether they are overlapping
 % more than indicated in Overlap and exclude them if they do.
 
-Threshold_Low_SN = 0.3; % how many neurons are consider high S/N - all others are checked for overlap
-Overlap = 0.6; % This is the Overlap neurons need to have to get kicked out
+Threshold_Low_SN = 0.7; % how many neurons are consider high S/N - all others are checked for overlap
+Overlap = 0.8; % This is the Overlap neurons need to have to get kicked out
 Outer_area = 6; % in pix, excludes all shapes that lie in this area 
-minPixel = 10; % minimum Size of components
+minPixel = 25; % minimum Size of components
 
 %%%%%%%  Registration over days
 % Choose your registration Method. From experience Baifra 'Ahanonu's
@@ -338,10 +338,8 @@ clear Movie_all CN_all Motion_Correction_QC
 %% If Dual Color : Motion Correction of Red frames and manual extraction of cells
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% ---- Apply saved GREEN MC shifts to RED movie + ROI extraction ----
+% Apply saved GREEN MC shifts to RED movie
 disp('Applying green-channel motion correction shifts to red channel...');
-ApplyShiftsRED;   % uses All_nam, T_DS_factor, Spatial_Downsampling, etc.
-disp('Finished RED channel processing.');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% CNMFE

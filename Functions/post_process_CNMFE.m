@@ -105,6 +105,8 @@ function post_process_CNMFE(All_nam, Threshold_Low_SN, Overlap, Outer_area, ...
                 % Get a new Img of the Outlines
                 neuron.A = neuron.A(:,~logical(Delete));            
                 Coor = neuron.show_contours(0.6);
+                h = findobj(gca, 'Type', 'line');
+                set(h, 'LineWidth', 0.4);
                 saveas(gcf,[All_nam{i}{ii} '\processed_data\Outlines_Neurons.png'])
             end
             
