@@ -1,24 +1,17 @@
 %% Extract neural signal with CNMFE
 
-function CNMFE(All_nam, Fs, NW2Test, channel)
+function CNMFE(All_nam, Fs, NW2Test)
     
 
     for i = 1:size(All_nam, 2)
-
-        nam_temp = All_nam{i};         
+        
+        nam_temp = All_nam{i};  
         Filenames = dir(fullfile([nam_temp '\processed_data'], '*.mat'));
-
-        if strcmpi(channel,'red')
-            index2 = contains({Filenames.name}, 'MC_red.mat');
-        elseif strcmpi(channel,'green')
-            index2 = contains({Filenames.name}, 'MC.mat');
-        else
-            error('Channel must be ''red'' or ''green''.');
-        end
+        index2 = cellfun(@(x) any(strfind(x, 'MC.mat')), {Filenames.name});
 
         %% choose multiple datasets or just one  
         neuron = Sources2D(); 
-        nam = fullfile(nam_temp, 'processed_data', Filenames(find(index2,1)).name);         % you can put all file names into a cell array; when it's empty, manually select files 
+        nam = fullfile(nam_temp, 'processed_data', Filenames(find(index2,1)).name); % you can put all file names into a cell array; when it's empty, manually select files 
         nam = neuron.select_data(nam);  %if nam is [], then select data interactively
         
         pars_envs = struct('memory_size_to_use', 150 / 12, ...   % GB, memory space you allow to use in MATLAB
@@ -30,7 +23,7 @@ function CNMFE(All_nam, Fs, NW2Test, channel)
 
         % -------------------------      SPATIAL      -------------------------  %
         gSig = 4;           % pixel, gaussian width of a gaussian kernel for filtering the data. 0 means no filtering
-        gSiz = 16;          % pixel, neuron diameter
+        gSiz = 12;          % pixel, neuron diameter - default 16
         ssub = 1;           % spatial downsampling factor
         with_dendrites = false;   % with dendrites or not
         if with_dendrites
@@ -63,8 +56,8 @@ function CNMFE(All_nam, Fs, NW2Test, channel)
         % -------------------------     BACKGROUND    -------------------------  %
         bg_model = 'ring';  % model of the background {'ring', 'svd'(default), 'nmf'}
         nb = 1;             % number of background sources for each patch (only be used in SVD and NMF model)
-        ring_radius = 18;  % when the ring model used, it is the radius of the ring used in the background model.
-        %otherwise, it's just the width of the overlapping area
+        ring_radius = 15;  % when the ring model used, it is the radius of the ring used in the background model.
+        %otherwise,it's just the width of the overlapping area - default 18
         num_neighbors = []; % number of neighbors for each neuron
 
         % -------------------------      MERGING      -------------------------  %
@@ -144,7 +137,7 @@ function CNMFE(All_nam, Fs, NW2Test, channel)
         
         % Set Big file processing true if file is above certain size
         b = matfile(nam);
-        [d1, d2, d3] = size(b.MC_red);
+        [d1, d2, d3] = size(b.MC);
         Size_mov = d1*d2*d3;
 
         if Size_mov <  3.5581e+9
@@ -273,9 +266,9 @@ function CNMFE(All_nam, Fs, NW2Test, channel)
         %% save neurons shapes
         neuron.save_neurons();
 
-        savefast([nam_temp '\processed_data\Result_CNMFE_' channel '.mat'], 'neuron');
-        savefast([nam_temp '\processed_data\Outline_' channel '.mat'], 'Coor');
-        savefast([nam_temp '\processed_data\CN_' channel '.mat'], 'Cn');
+        savefast([nam_temp '\processed_data\Result_CNMFE.mat'], 'neuron');
+        savefast([nam_temp '\processed_data\Outline.mat'], 'Coor');
+        savefast([nam_temp '\processed_data\CN.mat'], 'Cn');
 
 
     end

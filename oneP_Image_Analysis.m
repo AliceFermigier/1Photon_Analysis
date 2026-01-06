@@ -15,7 +15,7 @@ close
 % Specifies the initiallization folder for selection of Data and where the restart 
 % variable is saved - If empty, files will be saved in directory that
 % Matlab is currently initallized
-Direc_Imaging = 'F:\Inscopix_data\DualColor_202511\'; % Don't forget last backward Slash !
+Direc_Imaging = 'E:\Inscopix_data\DualColor_202511\'; % Don't forget last backward Slash !
 
 % How many animals should be processed ? For each animal you can select as
 % many Sessions as you want later. Every Animal will give you a prompt that
@@ -170,6 +170,8 @@ end
 % Code: https://www.mathworks.com/matlabcentral/fileexchange/18401-efficient-subpixel-image-registration-by-cross-correlation
 
 % Interactive Selection
+% Select all the sessions that you want to process. Regroup all the
+% sessions for the same animal in one window prompt
 All_nam = cell(Animals2process, 1);
 for i = 1:size(All_nam, 1)
     All_nam{i} = uipickfiles('FilterSpec', Direc_Imaging);
