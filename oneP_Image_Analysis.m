@@ -15,14 +15,13 @@ close
 % Specifies the initiallization folder for selection of Data and where the restart 
 % variable is saved - If empty, files will be saved in directory that
 % Matlab is currently initallized
-Direc_Imaging = 'E:\Inscopix_Projects\DualColor_Deinterleaved_data\'; % Don't forget last backward Slash !
+Direc_Imaging = 'F:\Inscopix_data\DualColor_202511\'; % Don't forget last backward Slash !
 
 % How many animals should be processed ? For each animal you can select as
 % many Sessions as you want later. Every Animal will give you a prompt that
 % allows you to select the Folder directories of the sessions you want to
 % process for this animal
-Animals2process = 2;
-dualcolor = true;
+Animals2process = 4;
 
 % Select the data type you want to process, currently the code is able to
 % process tif, tiff, isxd, hdf5 and mat files. For extension requests,
@@ -34,8 +33,8 @@ Data_Format_in = 'tiff'; % Specify if files were saved as hdf5, tif, tiff or isx
 ISDP_Path = 'C:\Program Files\Inscopix\Data Processing\'; % Change to your local installation 
 
 Recording_Speed = 20; % Recording speed of miniscope (in HZ)
-length_identifier = 3; % Length of animal identifier e.g. 865347 -> 6 // The code uses this to generate a final Folder Output for the different Animals
-Folder_Structure = 'FT'; % If the tifs are in a structure - Animal/Animal_Session/Tif - FFT, if Animal_Session/Tif - FT 
+length_identifier = 4; % Length of animal identifier e.g. 865347 -> 6 // The code uses this to generate a final Folder Output for the different Animals
+Folder_Structure = 'FFT'; % If the tifs are in a structure - Animal/Animal_Session/Tif - FFT, if Animal_Session/Tif - FT 
 
 %%%%% Motion Correction
 T_DS_factor = 1; % Used for Data DS
@@ -46,9 +45,6 @@ Indv_Template = true; % Do you want to generate a new template for each Session 
 Chunk_size = 3000; % How many frames are processed at the same time, decrease for lower RAM usage
 Qualitycheck = false; % Creates a DS video and max intensity projection Images for quality control
 Size_mov = 500; % Size of the displayed movie for quality control
-
-%%%%% Motion Correction for red channel if dual color
-Qualitycheckred = true; % Creates a DS video and max intensity projection Images for quality control
 
 %%%%% CNMFE
 % This feature enables processing of large files. Expect that CNMFE
@@ -75,10 +71,10 @@ PWD = ''; % The PWD to the GMail
 % components (1-Threshold_Low_SN) and checks whether they are overlapping
 % more than indicated in Overlap and exclude them if they do.
 
-Threshold_Low_SN = 0.6; % how many neurons are consider high S/N - all others are checked for overlap
-Overlap = 0.6; % This is the Overlap neurons need to have to get kicked out
+Threshold_Low_SN = 0.7; % how many neurons are consider high S/N - all others are checked for overlap
+Overlap = 0.8; % This is the Overlap neurons need to have to get kicked out
 Outer_area = 6; % in pix, excludes all shapes that lie in this area 
-minPixel = 10; % minimum Size of components
+minPixel = 25; % minimum Size of components
 
 %%%%%%%  Registration over days
 % Choose your registration Method. From experience Baifra 'Ahanonu's
@@ -189,18 +185,8 @@ for i = 1:numel(All_nam)
         
     % Find all .tif files in the folder
     Current_folder = [All_nam{i}{1} '\'];
-
-    if dualcolor
-        % Only select GREEN movie for motion correction
-        searchString = fullfile(Current_folder, ['*G_*.' Data_Format_in]);  % e.g. 839G_EPM.tiff
-        Filenames = dir(searchString);
-        if isempty(Filenames)
-            error('No GREEN movie found in %s. Expected something like 839G_*.tiff', Current_folder);
-        end
-    else
-        searchString = fullfile(Current_folder, ['*.' Data_Format_in]);
-        Filenames = dir(searchString);
-    end
+    searchString = fullfile(Current_folder, ['*.' Data_Format_in]);
+    Filenames = dir(searchString);
         
     [~, idx] = sort_nat({Filenames.name}); % Order the indices according to recording time
 
@@ -349,16 +335,11 @@ end
 clear Movie_all CN_all Motion_Correction_QC
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% If Dual Color : Motion Correction of Red frames and manual extraction of cells
+%% If Dual Color : Motion Correction of Red frames and manual extraction of cells
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Apply saved GREEN MC shifts to RED movie
+% Apply saved GREEN MC shifts to RED movie
 disp('Applying green-channel motion correction shifts to red channel...');
-ApplyShiftsRED;   % uses All_nam, T_DS_factor, Spatial_Downsampling, etc.
-
-%% ROI extraction
-disp('Manual extraction of ROIs');
-ManualROIsRED;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% CNMFE
@@ -368,7 +349,7 @@ ManualROIsRED;
 
 % Run CNMFE for all selected files
 for p = 1:size(All_nam, 1)
-    CNMFE(All_nam{p}, Fs, NW2Test, 'red');
+    CNMFE(All_nam{p}, Fs, NW2Test);
     vars = who('-regexp', 'mat_data');
     clear(vars{:})
 end
@@ -396,7 +377,7 @@ save([Direc_Imaging 'Restart_' num2str(Counter_mat) '.mat'], '-v7.3');
 % them after post processing - deletion of components
 % based on code found in: https://github.com/zhoupc/CNMF_E
 
-post_process_CNMFE(All_nam, Threshold_Low_SN, Overlap, Outer_area, minPixel, 'red');
+post_process_CNMFE(All_nam, Threshold_Low_SN, Overlap, Outer_area, minPixel)
 
 Current_Status = 'PostProcess finished';
 save([Direc_Imaging 'Restart_' num2str(Counter_mat) '.mat'], '-v7.3');
