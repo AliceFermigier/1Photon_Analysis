@@ -25,7 +25,7 @@ function CNMFE(All_nam, Fs, NW2Test)
         gSig = 4;           % pixel, gaussian width of a gaussian kernel for filtering the data. 0 means no filtering
         gSiz = 12;          % pixel, neuron diameter - default 16
         ssub = 1;           % spatial downsampling factor
-        with_dendrites = false;   % with dendrites or not
+        with_dendrites = true;   % with dendrites or not
         if with_dendrites
             % determine the search locations by dilating the current neuron shapes
             updateA_search_method = 'dilate';  % #ok<UNRCH>
