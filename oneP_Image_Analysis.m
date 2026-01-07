@@ -336,12 +336,12 @@ while ~Saved
 end
 clear Movie_all CN_all Motion_Correction_QC
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% If Dual Color : Motion Correction of Red frames and manual extraction of cells
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% If Dual Color : Motion Correction of secondary channel
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Apply saved GREEN MC shifts to RED movie
-disp('Applying green-channel motion correction shifts to red channel...');
+% Apply saved reference MC shifts to RED movie
+disp('Applying reference channel motion correction shifts to other channel...');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% CNMFE
