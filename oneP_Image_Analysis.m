@@ -38,7 +38,7 @@ Folder_Structure = 'FFT'; % If the tifs are in a structure - Animal/Animal_Sessi
 
 %%%%% Motion Correction
 T_DS_factor = 1; % Used for Data DS
-Spatial_Downsampling = 0.5; % Scale either 0.5 (half size), or 0.25(Quarter Size)-recommended // Improves Speed and RAM usage
+Spatial_Downsampling = 1; % Scale either 0.5 (half size), or 0.25(Quarter Size)-recommended // Improves Speed and RAM usage
 max_reps_motioncorr = 6; % Number of maximally allowed repititions of motion corrections
 Tolerance_motion = 0.01; % Number of tolerated motion before motion correction is stopped measure is = mean(shift of Frames) < Tolerance 
 Indv_Template = true; % Do you want to generate a new template for each Session // Recommendation - leave it at true
