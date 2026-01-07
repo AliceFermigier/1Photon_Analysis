@@ -47,7 +47,7 @@ function [Movie_all, Max_all] = Motion_correction(All_nam, max_reps_motioncorr, 
                 disp('File was already processed - Results will be overwritten !')
             end
             
-            searchString = fullfile(Current_folder, ['*G_*.' Data_Format_in]);
+            searchString = fullfile(Current_folder, ['*.' Data_Format_in]);
             Filenames = dir(searchString);
             disp('Filenames:')
             disp(Filenames)
