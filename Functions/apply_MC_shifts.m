@@ -4,7 +4,7 @@
 
 %#function isx
 
-function [Movie_all, Max_all] = apply_MC_shifts(All_nam, ...
+function [Movie_all, Max_all] = apply_MC_shifts(All_nam, All_nam_second,...
     T_DS_factor, Resize_factor, psf, Data_Format_in,...
     Chunk_size, Recording_Speed)
 
@@ -54,6 +54,33 @@ function [Movie_all, Max_all] = apply_MC_shifts(All_nam, ...
                 A = cell(num, 1);
                 t = Tiff([Current_folder Filenames(idx(1)).name]);
                 Size = size(read(t));
+                
+                % Resize data as indicated in the main script. The resize
+                % factormust match the one used for reference channel
+                
+                try
+                    parfor z = 1:num
+                        A{z} = imresize(loadtiff([Current_folder Filenames(idx(z)).name]), ...
+                            [Size(1)*Resize_factor, Size(2)*Resize_factor], 'bicubic');
+                    end
+                catch
+                    for z = 1:num
+                        Temp_tif = loadtiff([Current_folder Filenames(idx(z)).name]);
+                        
+                        try
+                            A{z} = imresize(Temp_tif, [Size(1)*Resize_factor, Size(2)*Resize_factor], 'bicubic');
+                        catch
+                            if iscell(Temp_tif) && numel(Temp_tif) == 3
+                                Piece1 = Temp_tif{1};
+                                Piece2 = Temp_tif{3};                            
+                                Temp_tif{2} = mean(cat(3, Piece1(:,:,end), Piece2(:,:,1)), 3, 'native');
+                                A{z} = imresize(cat(3, Temp_tif{:}), [Size(1)*Resize_factor, Size(2)*Resize_factor], 'bicubic');
+                            else
+                               error('This case has not occured before, please contact julian.hinz@fmi.ch if you cant fix it.')        
+                            end
+                        end
+                    end
+                end
                 
                 data = cat(3 , A{:});
                 clear A
