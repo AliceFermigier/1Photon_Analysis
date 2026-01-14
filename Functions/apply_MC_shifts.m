@@ -15,25 +15,22 @@ function [Movie_all, Max_all] = apply_MC_shifts(All_nam, All_nam_second,...
     for p = 1:size(All_nam, 1)
         % Identify Sessions of the same Animal
         reference_folder = All_nam{p}
-        % Retrieve corresponding secondary channel data
-        subfolder_extracted = %same as All-nam but G replaced by R
-        
-        % Correlation map
-        Max = cell(size(subfolder_extracted, 2), 1);
-        Movies = cell(size(subfolder_extracted, 2), 1);
         
         for pp = 1:size(reference_folder, 2)
             
             % Find all tif files in the folder
-            current_reference_folder = [reference_folder{pp} '\'];
-            Current_folder = %same as current_reference_folder but with R instead of G
+            current_reference_folder = [reference_folder{pp} filesep];
+            Current_folder = green2red_path(current_reference_folder);
+            Current_folder = [Current_folder filesep];
             disp('Current_folder:')
             disp(Current_folder)
+            
+            % Sanity check
+            if ~isfolder(red_folder)
+                error('Red channel folder not found:\n%s', Current_folder);
+            end
              
-            % Get Folder Name
-            [~,name_R,~] = fileparts(subfolder_extracted{pp});
-            name = ['S' name_R];
-
+            
             if ~exist([Current_folder 'processed_data'])
                 mkdir([Current_folder 'processed_data'])
             else
