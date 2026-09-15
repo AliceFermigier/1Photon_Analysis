@@ -29,12 +29,12 @@ Animals2process = 1;
 % If you select isxd, you will need to provide a Folder location with a
 % valid ISDP program installed. The code utlizes the infrastructure
 % provided by insxopix to load files
-Data_Format_in = 'isxd'; % Specify if files were saved as hdf5, tif, tiff or isxd, or mat 
+Data_Format_in = 'tiff'; % Specify if files were saved as hdf5, tif, tiff or isxd, or mat 
 ISDP_Path = 'C:\Program Files\Inscopix\Data Processing\'; % Change to your local installation 
 
 Recording_Speed = 20; % Recording speed of miniscope (in HZ)
-length_identifier = 6; % Length of animal identifier e.g. 865347 -> 6 // The code uses this to generate a final Folder Output for the different Animals
-Folder_Structure = 'FT'; % If the tifs are in a structure - Animal/Animal_Session/Tif - FFT, if Animal_Session/Tif - FT 
+length_identifier = 4; % Length of animal identifier e.g. 865347 -> 6 // The code uses this to generate a final Folder Output for the different Animals
+Folder_Structure = 'FFT'; % If the tifs are in a structure - Animal/Animal_Session/Tif - FFT, if Animal_Session/Tif - FT 
 
 %%%%% Motion Correction
 T_DS_factor = 1; % Used for Data DS
