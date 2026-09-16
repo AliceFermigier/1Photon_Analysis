@@ -1,7 +1,7 @@
-function apply_shifts_to_red(green_tif, shifts_mat, red_tif, out_folder, Chunk_size, Interleave_Mode)
+function apply_shifts_to_red(green_tif, shifts_mat, red_tif, out_folder, Chunk_size, Interleave_Mode, Fill_Value)
 %APPLY_SHIFTS_TO_RED  Apply a green channel's MC_Shifts.mat to the raw red channel.
 %
-%   apply_shifts_to_red(green_tif, shifts_mat, red_tif, out_folder, Chunk_size, Interleave_Mode)
+%   apply_shifts_to_red(green_tif, shifts_mat, red_tif, out_folder, Chunk_size, Interleave_Mode, Fill_Value)
 %
 %   green_tif       - path to the raw green .tif (used only for a frame-count sanity check)
 %   shifts_mat      - path to the green session's processed_data\MC_Shifts.mat
@@ -13,9 +13,29 @@ function apply_shifts_to_red(green_tif, shifts_mat, red_tif, out_folder, Chunk_s
 %                        green_first: pattern G,R,G,R,...,G  (N_green = N_red + 1)
 %                        red_first:   pattern R,G,R,G,...,R  (N_red = N_green + 1)
 %                        same:        N_green == N_red, matched 1:1
+%   Fill_Value      - value used to pad pixels exposed by the shift at the
+%                      borders (optional). One of:
+%                        'frame_mean' (default) - each frame's own mean value,
+%                                                  avoids a harsh 0-vs-signal
+%                                                  edge that flickers between
+%                                                  frames and inflates std/
+%                                                  contrast near the borders
+%                        'zero'                 - original pipeline behaviour
+%                        <numeric scalar>        - a fixed constant
+%                      NOTE: padded border pixels are NOT real data either
+%                      way - they're just less visually/statistically
+%                      disruptive with 'frame_mean'. For actual ROI
+%                      placement and fluorescence extraction, still avoid
+%                      trusting a margin around the edges at least as wide
+%                      as the largest shift magnitude in this session (see
+%                      MC_Shifts_applied.mat).
 %
 %   Requires imtranslate_old.m, loadtiff.m, savefast.m from
 %   fmi-basel/1Photon_Analysis on the MATLAB path.
+
+    if nargin < 7 || isempty(Fill_Value)
+        Fill_Value = 'frame_mean';
+    end
 
     % --- Load and concatenate the green channel's per-frame shifts ---
     % Shift_collection is a cell array (one cell per processing chunk),
@@ -102,9 +122,25 @@ function apply_shifts_to_red(green_tif, shifts_mat, red_tif, out_folder, Chunk_s
 
         for f = 1:n
             frame_shift = Shifts_red(s0 + f - 1, :);   % [row_shift col_shift]
+            frame_d = double(chunk(:,:,f));
+
+            if ischar(Fill_Value) || isstring(Fill_Value)
+                switch lower(char(Fill_Value))
+                    case 'frame_mean'
+                        F = mean(frame_d(:));
+                    case 'zero'
+                        F = 0;
+                    otherwise
+                        error('Unknown Fill_Value option: %s', Fill_Value);
+                end
+            else
+                F = Fill_Value;   % fixed numeric constant
+            end
+
             % Same subpixel translation call the pipeline itself uses,
-            % applied directly to the native-resolution raw frame.
-            shifted = imtranslate_old(double(chunk(:,:,f)), frame_shift);
+            % applied directly to the native-resolution raw frame, with a
+            % configurable border fill instead of the pipeline's hardcoded 0.
+            shifted = imtranslate_old(frame_d, frame_shift, F);
             chunk_shifted(:,:,f) = uint16(max(0, min(65535, round(shifted))));
         end
 

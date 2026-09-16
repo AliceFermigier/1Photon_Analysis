@@ -30,7 +30,7 @@
 %                                                         shifts used, for
 %                                                         provenance
 %
-% Written by/for: [your name], building on fmi-basel/1Photon_Analysis
+% Written by: Alice Fermigier, building on fmi-basel/1Photon_Analysis
 % (Julian Hinz, Luthi lab)
 
 %% ============ USER SETTINGS ============
@@ -45,6 +45,7 @@ Interleave_Mode = 'auto';  % 'auto' | 'green_first' | 'red_first' | 'same'
                             %   green_first: pattern G,R,G,R,...,G  (N_green = N_red + 1)  <- your case
                             %   red_first:   pattern R,G,R,G,...,R  (N_red = N_green + 1)
                             %   same:        N_green == N_red, matched 1:1
+Fill_Value = 'frame_mean';  % 'frame_mean' (recommended) | 'zero' | numeric constant
 Overwrite = false;         % if false, skip sessions whose MC.mat already exists
 
 %% ============ FIND AND PROCESS SESSIONS ============
@@ -98,8 +99,13 @@ for m = 1:numel(green_mouse_folders)
         end
 
         fprintf('\n=== Processing %s -> %s ===\n', exp_folder_G, exp_folder_R);
-        apply_shifts_to_red(green_tif, shifts_mat, red_tif, out_folder, Chunk_size, Interleave_Mode); %#ok<*NODEF> - function file on path
+        apply_shifts_to_red(green_tif, shifts_mat, red_tif, out_folder, Chunk_size, Interleave_Mode, Fill_Value); %#ok<*NODEF> - function file on path
     end
 end
 
 fprintf('\nAll sessions done.\n');
+
+% Core logic now lives in the standalone function file apply_shifts_to_red.m
+% (must be on the MATLAB path, e.g. saved next to this script) so it can
+% also be called directly for single-session testing - see
+% Test_Apply_MC_to_Red_single_session.m
