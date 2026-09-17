@@ -30,12 +30,12 @@
 %                                                         shifts used, for
 %                                                         provenance
 %
-% Written by/for: [your name], building on fmi-basel/1Photon_Analysis
+% Written by Alice Fermigier, building on fmi-basel/1Photon_Analysis
 % (Julian Hinz, Luthi lab)
 
 %% ============ USER SETTINGS ============
 
-Repo_Path = 'C:\path\to\1Photon_Analysis';     % root of the cloned repo
+RRepo_Path = 'C:\Users\afermigier\Documents\GitHub\1Photon_Analysis';
 addpath(genpath(Repo_Path));
 
 Root_Folder = 'I:\Inscopix_Projects\DualColor_Deinterleaved_data';
@@ -51,6 +51,13 @@ Overwrite = false;         % if false, skip sessions whose output already exists
 Process_Green = true;       % also regenerate the green channel with the same Fill_Value,
                              % saved as MC_meanpad.mat (does NOT overwrite the pipeline's
                              % own zero-padded MC.mat)
+
+Save_QC = true;              % save a quick QC snapshot (mean+std, raw vs corrected) per channel
+Recording_Speed = 20;        % Hz, per-channel frame rate after deinterleaving (matches pipeline default)
+QC_Start_Sec = 5;           % seconds into the recording where the QC window starts -
+                              % kept away from frame 1 to avoid LED-onset illumination artifacts
+QC_Num_Frames = 200;         % number of frames in the QC window
+Overwrite_QC = false;        % if false, skip QC snapshots that already exist (independent of Overwrite)
 
 %% ============ FIND AND PROCESS SESSIONS ============
 
