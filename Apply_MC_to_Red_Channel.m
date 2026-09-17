@@ -35,10 +35,10 @@
 
 %% ============ USER SETTINGS ============
 
-RRepo_Path = 'C:\Users\afermigier\Documents\GitHub\1Photon_Analysis';
+Repo_Path = 'C:\Users\jcourtin\Documents\GitHub\Alice\1Photon_Analysis';
 addpath(genpath(Repo_Path));
 
-Root_Folder = 'I:\Inscopix_Projects\DualColor_Deinterleaved_data';
+Root_Folder = 'F:\Inscopix_Projects\DualColor_Deinterleaved_data';
 
 Chunk_size = 3000;         % frames processed at once (matches pipeline default)
 Interleave_Mode = 'auto';  % 'auto' | 'green_first' | 'red_first' | 'same'
