@@ -50,10 +50,23 @@ function save_qc_snapshot(raw_path, mc_mat_path, out_png_path, qc_start_frame, q
     ax4 = subplot(2,2,4); imagesc(std_corr, clim_std); axis image off; colormap(ax4, 'hot'); colorbar;
     title('Corrected - std');
 
-    sgtitle(sprintf('%s QC: frames %d-%d', title_prefix, qc_start_frame, qc_start_frame+n-1), ...
-            'Interpreter', 'none');
+    % Overall title, drawn as a borderless textbox spanning the top of the
+    % figure. Avoids sgtitle (MATLAB R2018b+ only, and can be unavailable
+    % in some setups) so this works on any MATLAB version with no
+    % additional dependencies.
+    overall_title = sprintf('%s QC: frames %d-%d', title_prefix, qc_start_frame, qc_start_frame+n-1);
+    annotation(fig, 'textbox', [0 0.955 1 0.04], ...
+        'String', overall_title, 'Interpreter', 'none', ...
+        'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle', ...
+        'FontWeight', 'bold', 'FontSize', 11, 'EdgeColor', 'none');
 
-    exportgraphics(fig, out_png_path, 'Resolution', 150);
+    % exportgraphics is R2020a+; fall back to the older print() command if
+    % it's unavailable, so this still works on earlier MATLAB versions.
+    if exist('exportgraphics', 'file')
+        exportgraphics(fig, out_png_path, 'Resolution', 150);
+    else
+        print(fig, out_png_path, '-dpng', '-r150');
+    end
     close(fig);
     fprintf('Saved QC snapshot: %s\n', out_png_path);
 end
