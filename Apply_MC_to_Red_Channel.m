@@ -30,7 +30,7 @@
 %                                                         shifts used, for
 %                                                         provenance
 %
-% Written by: Alice Fermigier, building on fmi-basel/1Photon_Analysis
+% Written by/for: [your name], building on fmi-basel/1Photon_Analysis
 % (Julian Hinz, Luthi lab)
 
 %% ============ USER SETTINGS ============
@@ -46,7 +46,11 @@ Interleave_Mode = 'auto';  % 'auto' | 'green_first' | 'red_first' | 'same'
                             %   red_first:   pattern R,G,R,G,...,R  (N_red = N_green + 1)
                             %   same:        N_green == N_red, matched 1:1
 Fill_Value = 'frame_mean';  % 'frame_mean' (recommended) | 'zero' | numeric constant
-Overwrite = false;         % if false, skip sessions whose MC.mat already exists
+Overwrite = false;         % if false, skip sessions whose output already exists
+
+Process_Green = true;       % also regenerate the green channel with the same Fill_Value,
+                             % saved as MC_meanpad.mat (does NOT overwrite the pipeline's
+                             % own zero-padded MC.mat)
 
 %% ============ FIND AND PROCESS SESSIONS ============
 
@@ -95,11 +99,21 @@ for m = 1:numel(green_mouse_folders)
         out_mat    = fullfile(out_folder, 'MC.mat');
         if isfile(out_mat) && ~Overwrite
             fprintf('Already processed: %s (skipping, Overwrite = false)\n', exp_folder_R);
-            continue
+        else
+            fprintf('\n=== Processing %s -> %s ===\n', exp_folder_G, exp_folder_R);
+            apply_shifts_to_red(green_tif, shifts_mat, red_tif, out_folder, Chunk_size, Interleave_Mode, Fill_Value); %#ok<*NODEF> - function file on path
         end
 
-        fprintf('\n=== Processing %s -> %s ===\n', exp_folder_G, exp_folder_R);
-        apply_shifts_to_red(green_tif, shifts_mat, red_tif, out_folder, Chunk_size, Interleave_Mode, Fill_Value); %#ok<*NODEF> - function file on path
+        if Process_Green
+            green_out_folder = fullfile(green_session_path, 'processed_data');
+            green_meanpad_mat = fullfile(green_out_folder, 'MC_meanpad.mat');
+            if isfile(green_meanpad_mat) && ~Overwrite
+                fprintf('Already processed (mean-padded green): %s (skipping)\n', exp_folder_G);
+            else
+                fprintf('=== Regenerating green with Fill_Value = %s: %s ===\n', Fill_Value, exp_folder_G);
+                apply_shifts_to_green(green_tif, shifts_mat, green_out_folder, Chunk_size, Fill_Value);
+            end
+        end
     end
 end
 
