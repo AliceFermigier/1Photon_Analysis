@@ -14,8 +14,8 @@
 %     good approximation - motion correction operates on a much slower
 %     timescale than one inter-frame interval).
 %   - Folder layout:
-%       {Root}\{mouse}G\{mouse}G_{experiment}\{mouse}G_{experiment}.tif
-%       {Root}\{mouse}R\{mouse}R_{experiment}\{mouse}R_{experiment}.tif
+%       {Root}\{mouse}G\{mouse}G_{experiment}\{mouse}G_{experiment}.tiff
+%       {Root}\{mouse}R\{mouse}R_{experiment}\{mouse}R_{experiment}.tiff
 %   - The green session already has processed_data\MC_Shifts.mat
 %     (i.e. you already ran the repo's oneP_Image_Analysis.m on the green
 %     channel).
@@ -89,8 +89,8 @@ for m = 1:numel(green_mouse_folders)
         green_session_path = fullfile(mouse_G_path, exp_folder_G);
         red_session_path   = fullfile(mouse_R_path, exp_folder_R);
  
-        green_tif  = fullfile(green_session_path, [exp_folder_G '.tif']);
-        red_tif    = fullfile(red_session_path,   [exp_folder_R '.tif']);
+        green_tif  = fullfile(green_session_path, [exp_folder_G '.tiff']);
+        red_tif    = fullfile(red_session_path,   [exp_folder_R '.tiff']);
         shifts_mat = fullfile(green_session_path, 'processed_data', 'MC_Shifts.mat');
  
         if ~isfolder(red_session_path) || ~isfile(red_tif)
