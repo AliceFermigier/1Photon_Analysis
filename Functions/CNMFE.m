@@ -25,7 +25,7 @@ function CNMFE(All_nam, Fs, NW2Test)
         gSig = 4;           % pixel, gaussian width of a gaussian kernel for filtering the data. 0 means no filtering
         gSiz = 16;          % pixel, neuron diameter
         ssub = 1;           % spatial downsampling factor
-        with_dendrites = true;   % with dendrites or not
+        with_dendrites = false;   % with dendrites or not
         if with_dendrites
             % determine the search locations by dilating the current neuron shapes
             updateA_search_method = 'dilate';  % #ok<UNRCH>
@@ -33,7 +33,7 @@ function CNMFE(All_nam, Fs, NW2Test)
             updateA_dist = neuron.options.dist;
         else
             % determine the search locations by selecting a round area
-            updateA_search_method = 'ellipse'; %#ok<UNRCH>
+            updateA_search_method = 'ellipse'; % #ok<UNRCH>
             updateA_dist = 5;
             updateA_bSiz = neuron.options.dist;
         end
