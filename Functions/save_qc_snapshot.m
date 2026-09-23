@@ -45,9 +45,9 @@ function save_qc_snapshot(raw_path, mc_mat_path, out_png_path, qc_start_frame, q
     title('Raw - mean');
     ax2 = subplot(2,2,2); imagesc(mean_corr, clim_mean); axis image off; colormap(ax2, 'gray'); colorbar;
     title('Corrected - mean');
-    ax3 = subplot(2,2,3); imagesc(std_raw, clim_std); axis image off; colormap(ax3, 'hot'); colorbar;
+    ax3 = subplot(2,2,3); imagesc(std_raw, clim_std); axis image off; colorbar;
     title('Raw - std');
-    ax4 = subplot(2,2,4); imagesc(std_corr, clim_std); axis image off; colormap(ax4, 'hot'); colorbar;
+    ax4 = subplot(2,2,4); imagesc(std_corr, clim_std); axis image off; colorbar;
     title('Corrected - std');
 
     % Overall title, drawn as a borderless textbox spanning the top of the
