@@ -215,6 +215,16 @@ function CNMFE(All_nam, Fs, NW2Test)
         %%  merge neurons and update spatial/temporal components
         neuron.merge_neurons_dist_corr(show_merge);
         neuron.merge_high_corr(show_merge, merge_thr_spatial);
+        
+        %% defensive cleanup: a merge step can occasionally zero out a
+        %  component's footprint entirely. com.m divides by each neuron's total
+        %  footprint mass, so a zero-sum column crashes the next spatial update
+        %  with "Matrix is singular"/"NaN or Inf" - remove any such neuron first.
+        zero_ind = find(sum(neuron.A, 1) == 0);
+        if ~isempty(zero_ind)
+            fprintf('Removing %d neuron(s) with an all-zero footprint before spatial update.\n', numel(zero_ind));
+            neuron.delete(zero_ind);
+        end
 
         %% udpate spatial&temporal components, delete false positives and merge neurons
         % update spatial
