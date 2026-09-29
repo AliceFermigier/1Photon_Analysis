@@ -1,0 +1,21 @@
+-----------------UPDATE SPATIAL---------------------------
+> In com (line 24)
+  In determine_search_location (line 58)
+  In Sources2D/update_spatial_parallel (line 66)
+  In CNMFE (line 222)
+  In Run_CNMFE_test (line 38) 
+Warning: Matrix is singular to working precision. 
+Error using determine_search_location (line 66)
+Input matrix contains NaN or Inf.
+
+Error in Sources2D/update_spatial_parallel (line 66)
+IND = sparse(logical(determine_search_location(obj.A, search_method, options)));
+
+Error in CNMFE (line 222)
+            neuron.update_spatial_parallel(use_parallel, true);
+
+Error in Run_CNMFE_test (line 38)
+CNMFE({session_folder}, Fs, NW2Test);
+ 
+IdleTimeout has been reached.
+Parallel pool using the 'local' profile is shutting down.
