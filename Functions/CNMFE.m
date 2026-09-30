@@ -22,8 +22,8 @@ function CNMFE(All_nam, Fs, NW2Test)
         % -------------------------    COMPUTATION    -------------------------  %
 
         % -------------------------      SPATIAL      -------------------------  %
-        gSig = 4;           % pixel, gaussian width of a gaussian kernel for filtering the data. 0 means no filtering
-        gSiz = 16;          % pixel, neuron diameter
+        gSig = 3;           % pixel, gaussian width of a gaussian kernel for filtering the data. 0 means no filtering
+        gSiz = 12;          % pixel, neuron diameter
         ssub = 1;           % spatial downsampling factor
         with_dendrites = false;   % with dendrites or not
         if with_dendrites
