@@ -12,7 +12,7 @@ addpath(genpath(Repo_Path));
 
 base_dir    = 'E:\Inscopix_Projects\202508_DualColorMiniscope';
 mouse_color = '840R';
-task        = 'FearConditioning';
+task        = 'EPM';
 
 Fs = 20;          % recording frame rate (frames/sec) - same value used
                   % elsewhere in this pipeline (Recording_Speed)
