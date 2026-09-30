@@ -213,8 +213,13 @@ function CNMFE(All_nam, Fs, NW2Test)
         neuron_init = neuron.copy();
 
         %%  merge neurons and update spatial/temporal components
-        neuron.merge_neurons_dist_corr(show_merge);
-        neuron.merge_high_corr(show_merge, merge_thr_spatial);
+        if size(neuron.C, 1) >= 2
+            neuron.merge_neurons_dist_corr(show_merge);
+        end
+        
+        if size(neuron.C, 1) >= 2
+            neuron.merge_high_corr(show_merge, merge_thr_spatial);
+        end
         
         %% defensive cleanup: a merge step can occasionally zero out a
         %  component's footprint entirely. com.m divides by each neuron's total
@@ -235,7 +240,9 @@ function CNMFE(All_nam, Fs, NW2Test)
             neuron.update_spatial_parallel(use_parallel);
         end
         % merge neurons based on correlations 
-        neuron.merge_high_corr(show_merge, merge_thr_spatial);
+        if size(neuron.C, 1) >= 2
+            neuron.merge_high_corr(show_merge, merge_thr_spatial);
+        end
 
         for m=1:2
             % update temporal
@@ -245,7 +252,9 @@ function CNMFE(All_nam, Fs, NW2Test)
             neuron.remove_false_positives();
 
             % merge neurons based on temporal correlation + distances 
-            neuron.merge_neurons_dist_corr(show_merge);
+            if size(neuron.C, 1) >= 2
+                neuron.merge_neurons_dist_corr(show_merge);
+            end
         end
 
 
@@ -257,8 +266,12 @@ function CNMFE(All_nam, Fs, NW2Test)
         K = size(neuron.A,2);
         tags = neuron.tag_neurons_parallel();  % find neurons with fewer nonzero pixels than min_pixel and silent calcium transients
         neuron.remove_false_positives();
-        neuron.merge_neurons_dist_corr(show_merge);
-        neuron.merge_high_corr(show_merge, merge_thr_spatial);
+        if size(neuron.C, 1) >= 2
+            neuron.merge_neurons_dist_corr(show_merge);
+        end
+        if size(neuron.C, 1) >= 2
+            neuron.merge_high_corr(show_merge, merge_thr_spatial);
+        end
 
         if K~=size(neuron.A,2)
             neuron.update_spatial_parallel(use_parallel);
