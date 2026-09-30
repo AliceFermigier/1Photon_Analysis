@@ -7,12 +7,12 @@
 % (potentially hours, depending on length/resolution/machine) - this is
 % normal for CNMFE, not a hang.
 
-Repo_Path = 'C:\Users\afermigier\Documents\GitHub\1Photon_Analysis';
+Repo_Path = 'C:\Users\jcourtin\Documents\GitHub\Alice\1Photon_Analysis';
 addpath(genpath(Repo_Path));
 
-base_dir    = 'F:\Inscopix_Projects\202508_DualColorMiniscope';
+base_dir    = 'E:\Inscopix_Projects\202508_DualColorMiniscope';
 mouse_color = '840R';
-task        = 'EPM';
+task        = 'FearConditioning';
 
 Fs = 20;          % recording frame rate (frames/sec) - same value used
                   % elsewhere in this pipeline (Recording_Speed)

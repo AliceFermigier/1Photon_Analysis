@@ -1,18 +1,17 @@
------------------UPDATE SPATIAL---------------------------
-> In com (line 24)
-  In determine_search_location (line 58)
-  In Sources2D/update_spatial_parallel (line 66)
-  In CNMFE (line 222)
-  In Run_CNMFE_test (line 38) 
-Warning: Matrix is singular to working precision. 
-Error using determine_search_location (line 66)
-Input matrix contains NaN or Inf.
+Done!
+Update the constant baselines for all pixels..
+Done!
+Deleted 39 neurons:  1,  2,  3,  4,  5,  6,  9, 10, 11, 12, 13, 14, 20, 21, 22, 24, 25, 26, 28, 30, 31, 32, 34, 40, 43, 44, 45, 47, 52, 56, 58, 72, 77, 80, 81, 83, 84, 85, 86, 
+-------------MERGE HIGHLY CORRELATED CLOSE-BY NEURONS----------
 
-Error in Sources2D/update_spatial_parallel (line 66)
-IND = sparse(logical(determine_search_location(obj.A, search_method, options)));
+Error using corr (line 87)
+Requires a data matrix X.
 
-Error in CNMFE (line 222)
-            neuron.update_spatial_parallel(use_parallel, true);
+Error in Sources2D/merge_neurons_dist_corr (line 70)
+C_corr = corr(C_')-eye(K);
+
+Error in CNMFE (line 248)
+            neuron.merge_neurons_dist_corr(show_merge);
 
 Error in Run_CNMFE_test (line 38)
 CNMFE({session_folder}, Fs, NW2Test);
