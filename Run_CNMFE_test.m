@@ -7,12 +7,12 @@
 % (potentially hours, depending on length/resolution/machine) - this is
 % normal for CNMFE, not a hang.
 
-Repo_Path = 'C:\Users\jcourtin\Documents\GitHub\Alice\1Photon_Analysis';
+Repo_Path = 'C:\Users\afermigier\Documents\GitHub\1Photon_Analysis';
 addpath(genpath(Repo_Path));
 
-base_dir    = 'E:\Inscopix_Projects\202508_DualColorMiniscope';
+base_dir    = 'F:\Inscopix_Projects\202508_DualColorMiniscope';
 mouse_color = '840R';
-task        = 'FearConditioning';
+task        = 'EPM';
 
 Fs = 20;          % recording frame rate (frames/sec) - same value used
                   % elsewhere in this pipeline (Recording_Speed)
@@ -44,10 +44,25 @@ result_path = fullfile(session_folder, 'processed_data', 'Result_CNMFE.mat');
 load(result_path, 'neuron');
 fprintf('Found %d neuron(s).\n', size(neuron.A, 2));
 
+outline_png = fullfile(session_folder, 'processed_data', 'Outlines_Neurons.png');
+
 if size(neuron.A, 2) > 0
+    % show_contours/plot_contours SHOULD also handle the zero-neuron
+    % case gracefully (its loops just run zero times), but that's an
+    % untested edge case in bundled code we didn't write - only rely on
+    % it when there's actually something to draw. Below, the
+    % zero-neuron branch saves the plain background directly instead,
+    % which has no such dependency and always succeeds.
     neuron.show_contours(0.6);
     title(sprintf('%s - %d neurons', channel_label, size(neuron.A, 2)), 'Interpreter', 'none');
 else
     fprintf('No neurons passed threshold - this is expected on some red-channel sessions.\n');
     fprintf('You can still use Step3_Add_Missed_Neurons.m to draw ROIs manually on neuron.Cn.\n');
+
+    figure('Name', 'No neurons found');
+    imagesc(neuron.Cn, prctile(neuron.Cn(:), [1 99.5])); axis image off; colormap gray;
+    title(sprintf('%s - 0 neurons (background shown for reference)', channel_label), 'Interpreter', 'none');
 end
+
+saveas(gcf, outline_png);
+fprintf('Saved image to %s\n', outline_png);

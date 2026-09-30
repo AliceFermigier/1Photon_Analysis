@@ -91,6 +91,20 @@ for i = 1:numel(sessions)
         load(result_path, 'neuron');
         n_neurons = size(neuron.A, 2);
 
+        outline_png = fullfile(sess.folder, 'processed_data', 'Outlines_Neurons.png');
+        if n_neurons > 0
+            % Only rely on show_contours when there's something to draw -
+            % it's untested bundled code for the zero-neuron edge case.
+            neuron.show_contours(0.6);
+            title(sprintf('%s_%s - %d neurons', sess.mouse_color, sess.task, n_neurons), 'Interpreter', 'none');
+        else
+            figure('Name', 'No neurons found');
+            imagesc(neuron.Cn, prctile(neuron.Cn(:), [1 99.5])); axis image off; colormap gray;
+            title(sprintf('%s_%s - 0 neurons (background shown for reference)', sess.mouse_color, sess.task), 'Interpreter', 'none');
+        end
+        saveas(gcf, outline_png);
+        close(gcf);
+
         fprintf('OK (%d neurons, %.1f min)\n', n_neurons, elapsed_min);
         append_log(log_path, sess, 'ok', '', elapsed_min, n_neurons);
     catch ME
